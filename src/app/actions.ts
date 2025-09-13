@@ -40,10 +40,14 @@ export async function handleAnalyzeSocials(
     const result = await analyzeSocialProfiles({
       instagramHandle,
     });
+    // Check for empty results which can happen with private/invalid profiles
+    if (!result.interests || !result.ageRange) {
+        return { data: null, error: 'Failed to analyze profile. Please check that the Instagram handle is correct and the profile is public, then try again.' };
+    }
     return { data: { ...result, destination: validatedFields.data.destination }, error: null };
   } catch (error) {
     console.error(error);
-    return { data: null, error: 'Failed to analyze profile. Please check that the Instagram handle is correct and public, then try again.' };
+    return { data: null, error: 'Failed to analyze profile. Please check that the Instagram handle is correct and the profile is public, then try again.' };
   }
 }
 
