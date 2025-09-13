@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { Instagram, Search, Loader2 } from 'lucide-react';
 import { handleAnalyzeInstagram, type AnalyzeState } from '@/app/actions';
 import { Input } from '@/components/ui/input';
@@ -32,7 +33,7 @@ function SubmitButton() {
 
 export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: AnalysisData) => void }) {
   const initialState: AnalyzeState = { data: null, error: null };
-  const [state, formAction] = useFormState(handleAnalyzeInstagram, initialState);
+  const [state, formAction] = useActionState(handleAnalyzeInstagram, initialState);
   const { toast } = useToast();
 
   useEffect(() => {

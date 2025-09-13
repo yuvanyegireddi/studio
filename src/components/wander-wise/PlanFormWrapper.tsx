@@ -1,6 +1,7 @@
 'use client';
 
-import { useFormState, useFormStatus } from 'react-dom';
+import { useActionState } from 'react';
+import { useFormStatus } from 'react-dom';
 import { useEffect } from 'react';
 import { handleGeneratePlan, type PlanState } from '@/app/actions';
 import { useToast } from '@/hooks/use-toast';
@@ -26,7 +27,7 @@ export function PlanFormWrapper({
   onPlanGenerated: (plan: PlanData) => void;
 }) {
   const initialState: PlanState = { data: null, error: null };
-  const [state, formAction] = useFormState(handleGeneratePlan, initialState);
+  const [state, formAction] = useActionState(handleGeneratePlan, initialState);
   const { toast } = useToast();
 
   useEffect(() => {
