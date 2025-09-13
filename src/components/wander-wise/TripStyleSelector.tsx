@@ -46,17 +46,6 @@ export function TripStyleSelector({ analysis }: { analysis: AnalysisData }) {
         </CardHeader>
         <CardContent className="space-y-6">
           <div>
-            <Label className="font-medium text-base">Your Profile Insights</Label>
-            <Card className="text-sm mt-2 p-4 bg-muted/50">
-              <p>
-                <span className="font-semibold text-muted-foreground">Est. Age Range:</span> {analysis.ageRange}
-              </p>
-              <p>
-                <span className="font-semibold text-muted-foreground">Inferred Interests:</span> {analysis.interests}
-              </p>
-            </Card>
-          </div>
-          <div>
             <Label htmlFor="travelStyle" className="font-medium text-base">
               Who are you traveling with?
             </Label>

@@ -3,7 +3,6 @@
 import Image from 'next/image';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { PlaceHolderImages } from '@/lib/placeholder-images';
 import { ArrowLeft, MapPin, Calendar, Clock, Utensils, Bed } from 'lucide-react';
 import { Logo } from './Logo';
 import type { PlanData } from '@/app/page';
@@ -23,8 +22,6 @@ function getIconForActivity(activity: string) {
 }
 
 export function TripPlanDisplay({ plan, onReset }: { plan: PlanData; onReset: () => void }) {
-  const mapImage = PlaceHolderImages.find(img => img.id === 'map');
-
   return (
     <div className="min-h-screen bg-background p-4 sm:p-6 lg:p-8 animate-fade-in">
       <header className="flex justify-between items-center mb-6 max-w-5xl mx-auto">
@@ -42,20 +39,6 @@ export function TripPlanDisplay({ plan, onReset }: { plan: PlanData; onReset: ()
               <CardDescription className="text-lg">An AI-crafted journey based on your unique style.</CardDescription>
             </CardHeader>
         </Card>
-
-        {mapImage && (
-            <div className="mb-8 aspect-[16/7] relative rounded-2xl overflow-hidden border shadow-lg">
-                <Image
-                src={mapImage.imageUrl}
-                alt={mapImage.description}
-                fill
-                className="object-cover"
-                data-ai-hint={mapImage.imageHint}
-                priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
-            </div>
-        )}
 
         <div className="space-y-12">
           {Array.isArray(plan.tripPlan) && plan.tripPlan.map((dayPlan) => (
