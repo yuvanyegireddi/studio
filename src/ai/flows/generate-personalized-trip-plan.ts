@@ -56,7 +56,7 @@ const generatePersonalizedTripPlanPrompt = ai.definePrompt({
   output: {schema: GeneratePersonalizedTripPlanOutputSchema},
   prompt: `You are a world-class travel agent.
 
-Based on the user's interests, age range, travel style, and destination, generate a detailed and personalized 3-day trip plan. Create a catchy title for the trip. For each day, provide a title and a schedule of activities from morning to night.
+Based on the user's interests, age range, travel style, and destination, generate a detailed and personalized 3-day trip plan. Make sure to include famous landmarks and attractions. Create a catchy title for the trip. For each day, provide a title and a schedule of activities from morning to night.
 
 Destination: {{{destination}}}
 Interests: {{{interests}}}
