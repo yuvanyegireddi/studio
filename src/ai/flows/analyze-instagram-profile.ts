@@ -45,7 +45,7 @@ const prompt = ai.definePrompt({
   output: {schema: AnalyzeSocialProfilesOutputSchema},
   prompt: `You are an AI assistant specializing in analyzing social media profiles.
 
-  Your task is to extract the user's interests and estimate their age range based on their social media handles.
+  Your task is to extract the user's interests and estimate their age range based on their social media handles. If you cannot determine specific interests from the profile, default to a general list like "travel, food, photography, culture".
 
   Analyze the following social media profiles. At least one will be provided.
 
