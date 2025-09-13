@@ -14,6 +14,7 @@ import {z} from 'genkit';
 
 // Define the input schema for the trip plan generation.
 const GeneratePersonalizedTripPlanInputSchema = z.object({
+  destination: z.string().describe('The destination city and country (e.g., Paris, France).'),
   interests: z
     .string()
     .describe('A comma separated string of user interests extracted from the instagram handle.'),
@@ -55,8 +56,9 @@ const generatePersonalizedTripPlanPrompt = ai.definePrompt({
   output: {schema: GeneratePersonalizedTripPlanOutputSchema},
   prompt: `You are a world-class travel agent.
 
-Based on the user's interests, age range, and travel style, generate a detailed and personalized 3-day trip plan. Create a catchy title for the trip. For each day, provide a title and a schedule of activities from morning to night.
+Based on the user's interests, age range, travel style, and destination, generate a detailed and personalized 3-day trip plan. Create a catchy title for the trip. For each day, provide a title and a schedule of activities from morning to night.
 
+Destination: {{{destination}}}
 Interests: {{{interests}}}
 Age Range: {{{ageRange}}}
 Travel Style: {{{travelStyle}}}

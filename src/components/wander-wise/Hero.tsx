@@ -2,7 +2,7 @@
 
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
-import { Instagram, Search, Loader2 } from 'lucide-react';
+import { Instagram, Search, Loader2, MapPin } from 'lucide-react';
 import { handleAnalyzeInstagram, type AnalyzeState } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -62,7 +62,17 @@ export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: Analys
               Let our AI create a personalized travel itinerary from your Instagram.
             </CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="space-y-4">
+            <div className="relative">
+              <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
+              <Input
+                name="destination"
+                placeholder="e.g., Paris, France"
+                className="pl-12 text-base h-12"
+                required
+                aria-label="Destination"
+              />
+            </div>
             <div className="relative">
               <Instagram className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input

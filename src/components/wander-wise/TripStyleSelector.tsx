@@ -40,9 +40,10 @@ export function TripStyleSelector({ analysis }: { analysis: AnalysisData }) {
       <Card className="w-full max-w-md animate-fade-in shadow-2xl">
         <input type="hidden" name="interests" value={analysis.interests} />
         <input type="hidden" name="ageRange" value={analysis.ageRange} />
+        <input type="hidden" name="destination" value={analysis.destination} />
         <CardHeader>
           <CardTitle className="text-2xl font-headline">Just a few more details...</CardTitle>
-          <CardDescription>We've analyzed your profile. Now, tell us about your trip.</CardDescription>
+          <CardDescription>We've analyzed your profile. Now, tell us about your trip to <span className="font-semibold text-primary">{analysis.destination}</span>.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
           <div>

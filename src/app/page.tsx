@@ -11,6 +11,7 @@ type Stage = 'initial' | 'selecting_style' | 'displaying_plan';
 export type AnalysisData = {
   interests: string;
   ageRange: string;
+  destination: string;
 };
 
 export type PlanData = GeneratePersonalizedTripPlanOutput;
