@@ -1,10 +1,14 @@
-import {genkit} from 'genkit';
+import {genkit, GenkitPlugin} from 'genkit';
 import {googleAI} from '@genkit-ai/googleai';
 
-if (!process.env.GEMINI_API_KEY) {
+const plugins: GenkitPlugin[] = [];
+
+if (process.env.GEMINI_API_KEY) {
+  plugins.push(googleAI());
+} else {
   if (process.env.NODE_ENV === 'production') {
-    throw new Error(
-      'The GEMINI_API_KEY environment variable is not set. Please add it to your environment variables.'
+    console.error(
+      'The GEMINI_API_KEY environment variable is not set. Please add it to your environment variables. The app will not function correctly.'
     );
   } else {
     console.warn(
@@ -14,6 +18,6 @@ if (!process.env.GEMINI_API_KEY) {
 }
 
 export const ai = genkit({
-  plugins: [googleAI()],
+  plugins,
   model: 'googleai/gemini-2.5-flash',
 });
