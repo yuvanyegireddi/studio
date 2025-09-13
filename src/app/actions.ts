@@ -54,6 +54,7 @@ const planSchema = z.object({
   ageRange: z.string().min(1),
   travelStyle: z.enum(['solo', 'family', 'couple', 'friends']),
   destination: z.string().min(1),
+  duration: z.coerce.number().min(1).max(10),
 });
 
 export async function handleGeneratePlan(
@@ -65,6 +66,7 @@ export async function handleGeneratePlan(
     ageRange: formData.get('ageRange'),
     travelStyle: formData.get('travelStyle'),
     destination: formData.get('destination'),
+    duration: formData.get('duration'),
   });
 
   if (!validatedFields.success) {
