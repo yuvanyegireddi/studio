@@ -1,13 +1,18 @@
 'use server';
 
 import { z } from 'zod';
-import { analyzeInstagramProfile } from '@/ai/flows/analyze-instagram-profile';
+import { analyzeSocialProfiles } from '@/ai/flows/analyze-instagram-profile';
 import { generatePersonalizedTripPlan, type GeneratePersonalizedTripPlanOutput } from '@/ai/flows/generate-personalized-trip-plan';
 import { suggestDestinations, type SuggestDestinationsOutput } from '@/ai/flows/suggest-destinations';
 
-const instagramSchema = z.object({
-  instagramHandle: z.string().min(1, 'Instagram handle cannot be empty.'),
+const socialSchema = z.object({
+  instagramHandle: z.string().optional(),
+  tiktokHandle: z.string().optional(),
+  pinterestHandle: z.string().optional(),
   destination: z.string().min(1, 'Destination cannot be empty.'),
+}).refine(data => !!data.instagramHandle || !!data.tiktokHandle || !!data.pinterestHandle, {
+  message: "Please provide at least one social media handle.",
+  path: ["instagramHandle"],
 });
 
 export type AnalyzeState = {
@@ -15,18 +20,22 @@ export type AnalyzeState = {
   error: string | null;
 };
 
-export async function handleAnalyzeInstagram(
+export async function handleAnalyzeSocials(
   prevState: AnalyzeState,
   formData: FormData
 ): Promise<AnalyzeState> {
-  const validatedFields = instagramSchema.safeParse({
+  const validatedFields = socialSchema.safeParse({
     instagramHandle: formData.get('instagramHandle'),
+    tiktokHandle: formData.get('tiktokHandle'),
+    pinterestHandle: formData.get('pinterestHandle'),
     destination: formData.get('destination'),
   });
 
   if (!validatedFields.success) {
-    const fieldErrors = validatedFields.error.flatten().fieldErrors;
-    const errorMessage = fieldErrors.instagramHandle?.[0] ?? fieldErrors.destination?.[0] ?? 'Invalid input.';
+    const errorMessage = validatedFields.error.flatten().fieldErrors.instagramHandle?.[0] 
+      ?? validatedFields.error.flatten().fieldErrors.destination?.[0]
+      ?? validatedFields.error.flatten().formErrors[0]
+      ?? 'Invalid input.';
     return {
       data: null,
       error: errorMessage,
@@ -34,13 +43,16 @@ export async function handleAnalyzeInstagram(
   }
 
   try {
-    const result = await analyzeInstagramProfile({
-      instagramHandle: validatedFields.data.instagramHandle,
+    const { instagramHandle, tiktokHandle, pinterestHandle } = validatedFields.data;
+    const result = await analyzeSocialProfiles({
+      instagramHandle,
+      tiktokHandle,
+      pinterestHandle
     });
     return { data: { ...result, destination: validatedFields.data.destination }, error: null };
   } catch (error) {
     console.error(error);
-    return { data: null, error: 'Failed to analyze profile. Please try again or check the handle.' };
+    return { data: null, error: 'Failed to analyze profiles. Please try again or check the handles.' };
   }
 }
 

@@ -3,7 +3,7 @@
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Instagram, Search, Loader2, MapPin } from 'lucide-react';
-import { handleAnalyzeInstagram, type AnalyzeState, getDestinationSuggestions } from '@/app/actions';
+import { handleAnalyzeSocials, type AnalyzeState, getDestinationSuggestions } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -25,16 +25,25 @@ function SubmitButton() {
       ) : (
         <>
           <Search className="mr-2 h-4 w-4" />
-          Analyze Profile
+          Analyze Profiles
         </>
       )}
     </Button>
   );
 }
 
+const TikTokIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-music"><path d="M9 18V5l12-2v13"/><path d="M9 18a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/><path d="M21 16a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"/></svg>
+);
+
+const PinterestIcon = () => (
+    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-pinterest"><path d="M13.2 13.6s.4-1.2.6-1.8c.2-.7.3-1.2.3-1.6 0-1.2-.5-2.2-1.6-2.2-1.2 0-2 .8-2 1.8 0 .4.2.8.4 1.2l-1.3 4.5c-.3 1.3-1 3.2-3 3.2-1.3 0-2.3-1.2-2.3-2.8 0-2 1.3-3.6 3.2-3.6.8 0 1.5.3 2 .8.2-.5 1-2.2 1-2.2-1-.6-1.7-2-1.7-3.4 0-2.2 1.8-4.4 5-4.4 2.7 0 4.4 2 4.4 4C18 10.3 17 12 15.6 12c-.7 0-1.4-.4-1.6-.8-.2-.3-.2-.5 0-.8.3-.7.5-1.5.5-2.2 0-1-1.3-1.8-2.3-1.8-1 0-1.8.8-1.8 2.2 0 .5.3.8.5 1.2s.3.6.3.6l-1 4.2c-.2.8.1 1.8 1.2 1.8 1.5 0 2.5-1.5 2.5-3.3 0-1.2-.4-2.3-1-3Z"/></svg>
+);
+
+
 export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: AnalysisData) => void }) {
   const initialState: AnalyzeState = { data: null, error: null };
-  const [state, formAction] = useActionState(handleAnalyzeInstagram, initialState);
+  const [state, formAction] = useActionState(handleAnalyzeSocials, initialState);
   const { toast } = useToast();
   
   const [destination, setDestination] = useState('');
@@ -100,7 +109,7 @@ export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: Analys
             </div>
             <CardTitle className="text-3xl font-headline">Craft Your Perfect Getaway</CardTitle>
             <CardDescription className="text-lg">
-              Let our AI create a personalized travel itinerary from your Instagram.
+              Let our AI create a personalized travel itinerary from your social profiles.
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
@@ -136,10 +145,31 @@ export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: Analys
               <Instagram className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 name="instagramHandle"
-                placeholder="e.g., natgeotravel"
+                placeholder="Instagram handle (e.g., natgeotravel)"
                 className="pl-12 text-base h-12"
-                required
                 aria-label="Instagram Handle"
+              />
+            </div>
+            <div className="relative">
+              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <TikTokIcon />
+              </div>
+              <Input
+                name="tiktokHandle"
+                placeholder="TikTok handle (optional)"
+                className="pl-12 text-base h-12"
+                aria-label="TikTok Handle"
+              />
+            </div>
+            <div className="relative">
+              <div className="absolute left-3.5 top-1/2 -translate-y-1/2 text-muted-foreground">
+                <PinterestIcon />
+              </div>
+              <Input
+                name="pinterestHandle"
+                placeholder="Pinterest handle (optional)"
+                className="pl-12 text-base h-12"
+                aria-label="Pinterest Handle"
               />
             </div>
           </CardContent>
