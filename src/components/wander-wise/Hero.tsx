@@ -139,6 +139,7 @@ export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: Analys
                 placeholder="Instagram handle (e.g., natgeotravel)"
                 className="pl-12 text-base h-12"
                 aria-label="Instagram Handle"
+                required
               />
             </div>
           </CardContent>

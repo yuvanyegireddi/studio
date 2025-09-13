@@ -6,11 +6,8 @@ import { generatePersonalizedTripPlan, type GeneratePersonalizedTripPlanOutput }
 import { suggestDestinations, type SuggestDestinationsOutput } from '@/ai/flows/suggest-destinations';
 
 const socialSchema = z.object({
-  instagramHandle: z.string().optional(),
+  instagramHandle: z.string().min(1, 'Please provide an Instagram handle.'),
   destination: z.string().min(1, 'Destination cannot be empty.'),
-}).refine(data => !!data.instagramHandle, {
-  message: "Please provide at least one social media handle.",
-  path: ["instagramHandle"],
 });
 
 export type AnalyzeState = {
@@ -46,7 +43,7 @@ export async function handleAnalyzeSocials(
     return { data: { ...result, destination: validatedFields.data.destination }, error: null };
   } catch (error) {
     console.error(error);
-    return { data: null, error: 'Failed to analyze profile. Please try again or check the handle.' };
+    return { data: null, error: 'Failed to analyze profile. Please check that the Instagram handle is correct and public, then try again.' };
   }
 }
 
