@@ -62,12 +62,20 @@ export function TripPlanDisplay({ plan, onReset }: { plan: PlanData; onReset: ()
                     </div>
                     <Card className="ml-8 bg-card/50 backdrop-blur-sm border-l-4 border-primary/50 shadow-md hover:shadow-xl transition-shadow">
                       <CardHeader className="pb-3">
-                        <div className="flex items-center gap-4">
-                           {getIconForActivity(item.activity)}
-                          <div>
-                            <p className="text-sm font-semibold text-muted-foreground">{item.time}</p>
-                            <CardTitle className="text-xl">{item.activity}</CardTitle>
-                          </div>
+                        <div className="flex items-start justify-between gap-4">
+                           <div className="flex items-center gap-4">
+                            {getIconForActivity(item.activity)}
+                            <div>
+                              <p className="text-sm font-semibold text-muted-foreground">{item.time}</p>
+                              <CardTitle className="text-xl">{item.activity}</CardTitle>
+                            </div>
+                           </div>
+                           {item.estimatedDuration && (
+                            <div className="flex items-center gap-2 text-sm text-muted-foreground flex-shrink-0">
+                              <Clock className="h-4 w-4"/>
+                              <span>{item.estimatedDuration}</span>
+                            </div>
+                           )}
                         </div>
                       </CardHeader>
                       <CardContent>

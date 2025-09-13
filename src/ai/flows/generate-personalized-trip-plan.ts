@@ -28,6 +28,7 @@ const ItineraryItemSchema = z.object({
   time: z.string().describe("The time of the activity (e.g., 'Morning', '9:00 AM')."),
   activity: z.string().describe('The activity planned for that time.'),
   description: z.string().describe('A short description of the activity.'),
+  estimatedDuration: z.string().optional().describe('The estimated duration for the activity (e.g., "2 hours", "30 minutes").')
 });
 
 const DailyPlanSchema = z.object({
@@ -57,7 +58,7 @@ const generatePersonalizedTripPlanPrompt = ai.definePrompt({
   output: {schema: GeneratePersonalizedTripPlanOutputSchema},
   prompt: `You are a world-class travel agent.
 
-Based on the user's interests, age range, travel style, and destination, generate a detailed and personalized trip plan. Make sure to include famous landmarks and attractions. Create a catchy title for the trip. For each day, provide a title and a schedule of activities from morning to night.
+Based on the user's interests, age range, travel style, and destination, generate a detailed and personalized trip plan. Make sure to include famous landmarks and attractions. Create a catchy title for the trip. For each day, provide a title and a schedule of activities from morning to night. For each activity, include an estimated duration.
 
 Destination: {{{destination}}}
 Interests: {{{interests}}}
