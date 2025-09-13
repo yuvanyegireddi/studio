@@ -58,7 +58,7 @@ export function TripPlanDisplay({ plan, onReset }: { plan: PlanData; onReset: ()
         )}
 
         <div className="space-y-12">
-          {plan.tripPlan.map((dayPlan) => (
+          {Array.isArray(plan.tripPlan) && plan.tripPlan.map((dayPlan) => (
             <div key={dayPlan.day}>
               <div className="flex items-center gap-4 mb-6">
                 <div className="bg-primary/10 p-3 rounded-full">
