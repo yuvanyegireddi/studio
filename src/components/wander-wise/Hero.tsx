@@ -3,14 +3,15 @@
 import { useActionState } from 'react';
 import { useFormStatus } from 'react-dom';
 import { Instagram, Search, Loader2, MapPin } from 'lucide-react';
-import { handleAnalyzeInstagram, type AnalyzeState } from '@/app/actions';
+import { handleAnalyzeInstagram, type AnalyzeState, getDestinationSuggestions } from '@/app/actions';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Logo } from './Logo';
-import { useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import type { AnalysisData } from '@/app/page';
+import { useDebounce } from '@/hooks/use-debounce';
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -35,6 +36,28 @@ export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: Analys
   const initialState: AnalyzeState = { data: null, error: null };
   const [state, formAction] = useActionState(handleAnalyzeInstagram, initialState);
   const { toast } = useToast();
+  
+  const [destination, setDestination] = useState('');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [isSuggestionsVisible, setIsSuggestionsVisible] = useState(false);
+  const debouncedDestination = useDebounce(destination, 300);
+  const suggestionBoxRef = useRef<HTMLDivElement>(null);
+
+
+  const fetchSuggestions = useCallback(async (query: string) => {
+    if (query.length > 2) {
+      const result = await getDestinationSuggestions(query);
+      setSuggestions(result.suggestions);
+      setIsSuggestionsVisible(true);
+    } else {
+      setSuggestions([]);
+      setIsSuggestionsVisible(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchSuggestions(debouncedDestination);
+  }, [debouncedDestination, fetchSuggestions]);
 
   useEffect(() => {
     if (state.error) {
@@ -48,6 +71,24 @@ export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: Analys
       onAnalysisComplete(state.data);
     }
   }, [state, onAnalysisComplete, toast]);
+
+  const handleSuggestionClick = (suggestion: string) => {
+    setDestination(suggestion);
+    setSuggestions([]);
+    setIsSuggestionsVisible(false);
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (suggestionBoxRef.current && !suggestionBoxRef.current.contains(event.target as Node)) {
+        setIsSuggestionsVisible(false);
+      }
+    }
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [suggestionBoxRef]);
 
   return (
     <div className="flex items-center justify-center min-h-screen p-4 bg-grid-pattern">
@@ -63,7 +104,7 @@ export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: Analys
             </CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="relative">
+            <div className="relative" ref={suggestionBoxRef}>
               <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />
               <Input
                 name="destination"
@@ -71,7 +112,25 @@ export function Hero({ onAnalysisComplete }: { onAnalysisComplete: (data: Analys
                 className="pl-12 text-base h-12"
                 required
                 aria-label="Destination"
+                value={destination}
+                onChange={(e) => setDestination(e.target.value)}
+                autoComplete="off"
               />
+              {isSuggestionsVisible && suggestions.length > 0 && (
+                <Card className="absolute z-10 w-full mt-1 bg-background shadow-lg">
+                  <CardContent className="p-2">
+                    {suggestions.map((suggestion, index) => (
+                      <div
+                        key={index}
+                        className="p-2 hover:bg-accent rounded-md cursor-pointer"
+                        onClick={() => handleSuggestionClick(suggestion)}
+                      >
+                        {suggestion}
+                      </div>
+                    ))}
+                  </CardContent>
+                </Card>
+              )}
             </div>
             <div className="relative">
               <Instagram className="absolute left-3.5 top-1/2 -translate-y-1/2 h-5 w-5 text-muted-foreground" />

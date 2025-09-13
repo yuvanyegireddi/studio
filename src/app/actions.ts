@@ -3,6 +3,7 @@
 import { z } from 'zod';
 import { analyzeInstagramProfile } from '@/ai/flows/analyze-instagram-profile';
 import { generatePersonalizedTripPlan, type GeneratePersonalizedTripPlanOutput } from '@/ai/flows/generate-personalized-trip-plan';
+import { suggestDestinations, type SuggestDestinationsOutput } from '@/ai/flows/suggest-destinations';
 
 const instagramSchema = z.object({
   instagramHandle: z.string().min(1, 'Instagram handle cannot be empty.'),
@@ -79,5 +80,27 @@ export async function handleGeneratePlan(
   } catch (error) {
     console.error(error);
     return { data: null, error: 'Failed to generate trip plan. Please try again.' };
+  }
+}
+
+const suggestionSchema = z.object({
+  query: z.string(),
+});
+
+export async function getDestinationSuggestions(
+  query: string
+): Promise<SuggestDestinationsOutput> {
+  const validatedFields = suggestionSchema.safeParse({ query });
+
+  if (!validatedFields.success || !validatedFields.data.query) {
+    return { suggestions: [] };
+  }
+
+  try {
+    const result = await suggestDestinations({ query: validatedFields.data.query });
+    return result;
+  } catch (error) {
+    console.error(error);
+    return { suggestions: [] };
   }
 }
