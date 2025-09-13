@@ -7,10 +7,8 @@ import { suggestDestinations, type SuggestDestinationsOutput } from '@/ai/flows/
 
 const socialSchema = z.object({
   instagramHandle: z.string().optional(),
-  tiktokHandle: z.string().optional(),
-  pinterestHandle: z.string().optional(),
   destination: z.string().min(1, 'Destination cannot be empty.'),
-}).refine(data => !!data.instagramHandle || !!data.tiktokHandle || !!data.pinterestHandle, {
+}).refine(data => !!data.instagramHandle, {
   message: "Please provide at least one social media handle.",
   path: ["instagramHandle"],
 });
@@ -26,8 +24,6 @@ export async function handleAnalyzeSocials(
 ): Promise<AnalyzeState> {
   const validatedFields = socialSchema.safeParse({
     instagramHandle: formData.get('instagramHandle'),
-    tiktokHandle: formData.get('tiktokHandle'),
-    pinterestHandle: formData.get('pinterestHandle'),
     destination: formData.get('destination'),
   });
 
@@ -43,16 +39,14 @@ export async function handleAnalyzeSocials(
   }
 
   try {
-    const { instagramHandle, tiktokHandle, pinterestHandle } = validatedFields.data;
+    const { instagramHandle } = validatedFields.data;
     const result = await analyzeSocialProfiles({
       instagramHandle,
-      tiktokHandle,
-      pinterestHandle
     });
     return { data: { ...result, destination: validatedFields.data.destination }, error: null };
   } catch (error) {
     console.error(error);
-    return { data: null, error: 'Failed to analyze profiles. Please try again or check the handles.' };
+    return { data: null, error: 'Failed to analyze profile. Please try again or check the handle.' };
   }
 }
 

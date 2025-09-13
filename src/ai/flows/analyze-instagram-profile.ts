@@ -16,14 +16,6 @@ const AnalyzeSocialProfilesInputSchema = z.object({
     .string()
     .optional()
     .describe('The Instagram handle of the user.'),
-  tiktokHandle: z
-    .string()
-    .optional()
-    .describe('The TikTok handle of the user.'),
-  pinterestHandle: z
-    .string()
-    .optional()
-    .describe('The Pinterest handle of the user.'),
 });
 export type AnalyzeSocialProfilesInput = z.infer<
   typeof AnalyzeSocialProfilesInputSchema
@@ -59,14 +51,6 @@ const prompt = ai.definePrompt({
 
   {{#if instagramHandle}}
   Instagram handle: {{{instagramHandle}}}
-  {{/if}}
-
-  {{#if tiktokHandle}}
-  TikTok handle: {{{tiktokHandle}}}
-  {{/if}}
-  
-  {{#if pinterestHandle}}
-  Pinterest handle: {{{pinterestHandle}}}
   {{/if}}
 
   Provide the output in the following format:
