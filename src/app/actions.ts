@@ -2,7 +2,7 @@
 
 import { z } from 'zod';
 import { analyzeInstagramProfile } from '@/ai/flows/analyze-instagram-profile';
-import { generatePersonalizedTripPlan } from '@/ai/flows/generate-personalized-trip-plan';
+import { generatePersonalizedTripPlan, type GeneratePersonalizedTripPlanOutput } from '@/ai/flows/generate-personalized-trip-plan';
 
 const instagramSchema = z.object({
   instagramHandle: z.string().min(1, 'Instagram handle cannot be empty.'),
@@ -40,7 +40,7 @@ export async function handleAnalyzeInstagram(
 }
 
 export type PlanState = {
-  data: { tripPlan: string } | null;
+  data: GeneratePersonalizedTripPlanOutput | null;
   error: string | null;
 };
 

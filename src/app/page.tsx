@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { Hero } from '@/components/wander-wise/Hero';
 import { PlanFormWrapper } from '@/components/wander-wise/PlanFormWrapper';
 import { TripPlanDisplay } from '@/components/wander-wise/TripPlanDisplay';
+import type { GeneratePersonalizedTripPlanOutput } from '@/ai/flows/generate-personalized-trip-plan';
 
 type Stage = 'initial' | 'selecting_style' | 'displaying_plan';
 
@@ -12,9 +13,7 @@ export type AnalysisData = {
   ageRange: string;
 };
 
-export type PlanData = {
-  tripPlan: string;
-};
+export type PlanData = GeneratePersonalizedTripPlanOutput;
 
 export default function Home() {
   const [stage, setStage] = useState<Stage>('initial');

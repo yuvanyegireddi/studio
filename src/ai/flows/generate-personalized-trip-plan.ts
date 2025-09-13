@@ -22,9 +22,22 @@ const GeneratePersonalizedTripPlanInputSchema = z.object({
 });
 export type GeneratePersonalizedTripPlanInput = z.infer<typeof GeneratePersonalizedTripPlanInputSchema>;
 
+const ItineraryItemSchema = z.object({
+  time: z.string().describe("The time of the activity (e.g., 'Morning', '9:00 AM')."),
+  activity: z.string().describe('The activity planned for that time.'),
+  description: z.string().describe('A short description of the activity.'),
+});
+
+const DailyPlanSchema = z.object({
+  day: z.number().describe('The day number of the trip (e.g., 1).'),
+  title: z.string().describe("A title for the day's plan (e.g., 'Arrival and Exploration')."),
+  items: z.array(ItineraryItemSchema).describe('A list of itinerary items for the day.'),
+});
+
 // Define the output schema for the trip plan generation.
 const GeneratePersonalizedTripPlanOutputSchema = z.object({
-  tripPlan: z.string().describe('A detailed trip plan generated based on the user input.'),
+  tripTitle: z.string().describe("A catchy title for the entire trip."),
+  tripPlan: z.array(DailyPlanSchema).describe('An array of daily plans for the trip.'),
 });
 export type GeneratePersonalizedTripPlanOutput = z.infer<typeof GeneratePersonalizedTripPlanOutputSchema>;
 
@@ -42,13 +55,13 @@ const generatePersonalizedTripPlanPrompt = ai.definePrompt({
   output: {schema: GeneratePersonalizedTripPlanOutputSchema},
   prompt: `You are a world-class travel agent.
 
-Based on the user's interests, age range, and travel style, generate a detailed and personalized trip plan.
+Based on the user's interests, age range, and travel style, generate a detailed and personalized 3-day trip plan. Create a catchy title for the trip. For each day, provide a title and a schedule of activities from morning to night.
 
 Interests: {{{interests}}}
 Age Range: {{{ageRange}}}
 Travel Style: {{{travelStyle}}}
 
-Trip Plan:`,
+Generate a complete 3-day itinerary.`,
 });
 
 // Define the Genkit flow for generating the trip plan.
